@@ -1,0 +1,60 @@
+- hosts: localhost
+  remote_user: '{{ remote_user }}'
+  gather_facts: no  
+  become: yes
+  become_user: '{{ become_user }}'
+  vars_files:
+    - vault.yml
+
+  tasks:    
+    - name: install common configuration
+      vars:
+        consul_version: 1.8.4
+        nomad_version: 0.12.5
+        ssh_ports:
+          - 2222
+          - 2223
+          - 2224
+      include_tasks: tasks/common-configuration.yml
+      loop: "{{ ssh_ports }}"
+      loop_control:
+        loop_var: ssh_port  
+
+    - name: install server agent configuration
+      vars:
+        ssh_ports:
+          - 2222
+      include_tasks: tasks/server-agent-configuration.yml
+      loop: "{{ ssh_ports }}"
+      loop_control:
+        loop_var: ssh_port
+
+    - name: install client agent configuration
+      vars:
+        ssh_ports:
+          - 2223
+          - 2224
+      include_tasks: tasks/client-agent-configuration.yml
+      loop: "{{ ssh_ports }}"
+      loop_control:
+        loop_var: ssh_port
+
+    - name: run consul agents
+      vars:
+        ssh_ports:
+          - 2222
+          - 2223
+          - 2224
+      include_tasks: tasks/run-agents.yml
+      loop: "{{ ssh_ports }}"
+      loop_control:
+        loop_var: ssh_port
+
+    - name: run fabio job
+      vars:
+        ssh_ports:
+          - 2222
+      include_tasks: tasks/run-fabio.yml
+      loop: "{{ ssh_ports }}"
+      loop_control:
+        loop_var: ssh_port

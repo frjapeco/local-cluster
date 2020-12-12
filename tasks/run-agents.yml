@@ -1,0 +1,16 @@
+- name: switch ssh port
+  include: tasks/switch-ssh-port.yml
+
+- name: start consul service
+  systemd:
+    name: consul
+    enabled: yes
+    daemon_reload: yes
+    state: started
+
+- name: start nomad service
+  systemd:
+    name: nomad
+    enabled: yes
+    daemon_reload: yes
+    state: started

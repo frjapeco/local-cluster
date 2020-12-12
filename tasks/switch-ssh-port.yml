@@ -1,0 +1,3 @@
+- name: ssh port {{ ssh_port }}
+  set_fact:
+    ansible_port: '{{ ssh_port }}'

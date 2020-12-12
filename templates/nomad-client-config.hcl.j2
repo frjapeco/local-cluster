@@ -1,0 +1,16 @@
+datacenter = "localhost"
+log_level = "DEBUG"
+data_dir = "/tmp/nomad"
+client {
+    enabled = true
+    servers = ["10.0.0.4:4647"]
+}
+plugin "docker" {
+  config {
+    gc {
+      dangling_containers {
+        enabled = false
+      }
+    }
+  }
+}

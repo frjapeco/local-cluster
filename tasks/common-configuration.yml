@@ -1,0 +1,119 @@
+- name: switch ssh port
+  include: tasks/switch-ssh-port.yml
+
+- name: deleting previous installation files
+  file:
+    path: '{{ item }}'
+    state: absent
+  with_items:
+    - '/usr/bin/consul'
+    - '/usr/bin/nomad'
+    - '/tmp/consul_{{ consul_version }}_linux_amd64.zip'
+    - '/tmp/nomad_{{ nomad_version }}_linux_amd64.zip'
+    - '/usr/lib/systemd/system/consul.service'
+    - '/usr/lib/systemd/system/nomad.service'
+    - '/etc/consul.d/'
+    - '/etc/nomad.d/'
+
+- name: download consul
+  get_url: 
+    url: https://releases.hashicorp.com/consul/{{ consul_version }}/consul_{{ consul_version }}_linux_amd64.zip
+    dest: /tmp
+
+- name: download nomad
+  get_url: 
+    url: https://releases.hashicorp.com/nomad/{{ nomad_version }}/nomad_{{ nomad_version }}_linux_amd64.zip
+    dest: /tmp
+
+- name: install unzip
+  apt:
+    name: unzip
+
+- name: extract consul
+  unarchive:
+    src: /tmp/consul_{{ consul_version }}_linux_amd64.zip
+    dest: /usr/bin
+    remote_src: yes    
+
+- name: extract nomad
+  unarchive:
+    src: /tmp/nomad_{{ nomad_version }}_linux_amd64.zip
+    dest: /usr/bin
+    remote_src: yes
+
+- name: set consul owner
+  file:
+    path: /usr/bin/consul
+    owner: root
+    group: root
+
+- name: consul autocomplete install
+  command: consul -autocomplete-install && complete -C /usr/bin/consul consul
+  ignore_errors: yes
+
+- name: create consul group
+  group:
+    name: consul
+
+- name: create consul user
+  user:
+    name: consul
+    group: consul
+    home: /etc/consul.d
+    shell: /bin/false
+
+- name: create /opt/consul directory
+  file:
+    path: /opt/consul
+    state: directory
+    
+- name: set /opt/consul owner
+  file:
+    path: /opt/consul
+    owner: consul
+    group: consul
+
+- name: install TLS Consul server CA
+  copy:
+    content: '{{ consul_ca }}'
+    dest: /etc/consul.d/consul-ca.pem
+    owner: root
+    group: root
+    mode: 0644
+
+- name: install TLS Consul server CA key
+  copy:
+    content: '{{ consul_ca_key }}'
+    dest: /etc/consul.d/consul-ca-key.pem
+    owner: root
+    group: root
+    mode: 0600 
+
+- name: copy consul.hcl file
+  template:
+    src: ./templates/consul-config.hcl.j2
+    dest: /etc/consul.d/consul.hcl
+    owner: consul
+    group: consul
+    mode: 640
+
+- name: create nomad config folder
+  file:
+    path: /etc/nomad.d
+    state: directory
+
+- name: copy consul.service file
+  template:
+    src: ./templates/consul.service.j2
+    dest: /usr/lib/systemd/system/consul.service
+    owner: root
+    group: root
+    mode: 640
+
+- name: copy nomad.service file
+  template:
+    src: ./templates/nomad.service.j2
+    dest: /usr/lib/systemd/system/nomad.service
+    owner: root
+    group: root
+    mode: 640

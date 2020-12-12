@@ -1,0 +1,36 @@
+- name: switch ssh port
+  include: tasks/switch-ssh-port.yml
+
+- name: install TLS Consul server certificate
+  copy:
+    content: '{{ consul_server_cert }}'
+    dest: /etc/consul.d/consul-cert.pem
+    owner: root
+    group: root
+    mode: 0644
+
+- name: install TLS Consul server key
+  copy:
+    content: '{{ consul_server_key }}'
+    dest: /etc/consul.d/consul-key.pem
+    owner: root
+    group: root
+    mode: 0600  
+
+- name: copy consul-server-config.hcl file
+  template:
+    src: ./templates/consul-server-config.hcl.j2
+    dest: /etc/consul.d/server.hcl
+    owner: consul
+    group: consul
+    mode: 640
+
+- name: copy nomad-server-config.hcl file
+  template:
+    src: ./templates/nomad-server-config.hcl.j2
+    dest: /etc/nomad.d/nomad.hcl
+
+- name: copy fabio.hcl file
+  template:
+    src: ./templates/fabio.hcl.j2
+    dest: /etc/nomad.d/fabio.hcl

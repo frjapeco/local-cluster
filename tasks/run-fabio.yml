@@ -1,0 +1,6 @@
+- name: switch ssh port
+  include: tasks/switch-ssh-port.yml
+
+- name: run fabio job
+  command: nomad job run /etc/nomad.d/fabio.hcl
+  become: yes
