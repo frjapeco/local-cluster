@@ -1,4 +1,4 @@
-datacenter = "localhost"
+datacenter = "local-cluster"
 data_dir = "/opt/consul"
 encrypt = "{{ gossip_encryption_key }}"
 ca_file = "/etc/consul.d/consul-ca.pem"
@@ -8,3 +8,4 @@ verify_incoming = true
 verify_outgoing = true
 verify_server_hostname = true
 retry_join = ["10.0.0.4"]
+bind_addr = {{ "\"{{ GetInterfaceIP \\\"enp0s3\\\" }}\"" }}

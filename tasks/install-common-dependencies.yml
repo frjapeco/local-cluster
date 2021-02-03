@@ -1,7 +1,4 @@
-- name: switch ssh port
-  include: tasks/switch-ssh-port.yml
-
-- name: deleting previous installation files
+- name: delete previous installation files
   file:
     path: '{{ item }}'
     state: absent
@@ -15,6 +12,26 @@
     - '/etc/consul.d/'
     - '/etc/nomad.d/'
 
+- name: update apt cache
+  apt: update_cache=yes cache_valid_time=3600
+
+- name: upgrade all apt packages
+  apt: upgrade=dist
+  
+- name: install common packages
+  apt:
+    name: "{{ packages }}"
+    state: present
+    update_cache: yes
+  vars:
+    packages:
+    - apt-transport-https
+    - ca-certificates
+    - curl
+    - software-properties-common
+    - gnupg-agent
+    - unzip
+
 - name: download consul
   get_url: 
     url: https://releases.hashicorp.com/consul/{{ consul_version }}/consul_{{ consul_version }}_linux_amd64.zip
@@ -24,10 +41,6 @@
   get_url: 
     url: https://releases.hashicorp.com/nomad/{{ nomad_version }}/nomad_{{ nomad_version }}_linux_amd64.zip
     dest: /tmp
-
-- name: install unzip
-  apt:
-    name: unzip
 
 - name: extract consul
   unarchive:
@@ -47,7 +60,7 @@
     owner: root
     group: root
 
-- name: consul autocomplete install
+- name: autocomplete consul installation
   command: consul -autocomplete-install && complete -C /usr/bin/consul consul
   ignore_errors: yes
 
@@ -73,21 +86,21 @@
     owner: consul
     group: consul
 
-- name: install TLS Consul server CA
+- name: install tls consul server ca
   copy:
     content: '{{ consul_ca }}'
     dest: /etc/consul.d/consul-ca.pem
     owner: root
     group: root
-    mode: 0644
+    mode: 640
 
-- name: install TLS Consul server CA key
+- name: install tls consul server ca key
   copy:
     content: '{{ consul_ca_key }}'
     dest: /etc/consul.d/consul-ca-key.pem
     owner: root
     group: root
-    mode: 0600 
+    mode: 640 
 
 - name: copy consul.hcl file
   template:
@@ -97,7 +110,7 @@
     group: consul
     mode: 640
 
-- name: create nomad config folder
+- name: creat nomad config folder
   file:
     path: /etc/nomad.d
     state: directory
@@ -117,3 +130,29 @@
     owner: root
     group: root
     mode: 640
+  
+- name: add an apt sign key for docker
+  apt_key:
+    url: https://download.docker.com/linux/ubuntu/gpg
+    state: present
+
+- name: add apt repository for stable version
+  apt_repository:
+    repo: deb [arch=amd64] https://download.docker.com/linux/ubuntu focal stable
+    state: present
+
+- name: install docker
+  apt:
+    name: "{{ packages }}"
+    state: present
+    update_cache: yes
+  vars:
+    packages:
+    - docker-ce
+    - docker-ce-cli 
+    - containerd.io
+
+- name: add user to docker group
+  user:
+    name: "{{ansible_user}}"
+    group: docker

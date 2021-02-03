@@ -1,7 +1,4 @@
-- name: switch ssh port
-  include: tasks/switch-ssh-port.yml
-
-- name: install TLS client certificate
+- name: install tls client certificate
   copy:
     content: '{{ consul_client_cert }}'
     dest: /etc/consul.d/consul-cert.pem
@@ -9,7 +6,7 @@
     group: root
     mode: 0644
 
-- name: install TLS client certificate key
+- name: install tls client certificate key
   copy:
     content: '{{ consul_client_key }}'
     dest: /etc/consul.d/consul-key.pem
@@ -21,3 +18,6 @@
   template:
     src: ./templates/nomad-client-config.hcl.j2
     dest: /etc/nomad.d/nomad.hcl
+
+- name: run client agents
+  include_tasks: tasks/run-cluster-agents.yml

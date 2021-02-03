@@ -1,7 +1,4 @@
-- name: switch ssh port
-  include: tasks/switch-ssh-port.yml
-
-- name: install TLS Consul server certificate
+- name: install tls consul server certificate
   copy:
     content: '{{ consul_server_cert }}'
     dest: /etc/consul.d/consul-cert.pem
@@ -9,7 +6,7 @@
     group: root
     mode: 0644
 
-- name: install TLS Consul server key
+- name: install tls consul server key
   copy:
     content: '{{ consul_server_key }}'
     dest: /etc/consul.d/consul-key.pem
@@ -34,3 +31,24 @@
   template:
     src: ./templates/fabio.hcl.j2
     dest: /etc/nomad.d/fabio.hcl
+
+- name: copy jenkins.service file
+  template:
+    src: ./templates/jenkins.service.j2
+    dest: /usr/lib/systemd/system/jenkins.service
+    owner: root
+    group: root
+    mode: 640
+
+- name: run server agents
+  include_tasks: tasks/run-cluster-agents.yml
+
+- name: start jenkins service
+  systemd:
+    name: jenkins
+    state: restarted
+    enabled: yes
+    daemon_reload: yes
+
+- name: run fabio job
+  command: nomad job run /etc/nomad.d/fabio.hcl
