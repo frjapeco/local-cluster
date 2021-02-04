@@ -11,12 +11,6 @@
     - '/usr/lib/systemd/system/nomad.service'
     - '/etc/consul.d/'
     - '/etc/nomad.d/'
-
-- name: update apt cache
-  apt: update_cache=yes cache_valid_time=3600
-
-- name: upgrade all apt packages
-  apt: upgrade=dist
   
 - name: install common packages
   apt:
