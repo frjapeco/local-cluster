@@ -1,9 +1,6 @@
-datacenter = "local-cluster"
-log_level = "DEBUG"
-data_dir = "/tmp/nomad"
 client {
     enabled = true
-    servers = ["10.0.0.4:4647"]
+    servers = ["10.0.0.4:4647","10.0.0.5:4647"]
 }
 plugin "docker" {
   config {
@@ -11,6 +8,6 @@ plugin "docker" {
       dangling_containers {
         enabled = false
       }
-    }
+    } 
   }
 }
