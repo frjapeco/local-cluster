@@ -1,0 +1,15 @@
+- name: copy fabio.hcl file
+  template:
+    src: ./templates/fabio.hcl.j2
+    dest: ~/fabio.hcl
+
+- name: copy http-echo.hcl file
+  template:
+    src: ./templates/http-echo.hcl.j2
+    dest: ~/http-echo.hcl
+
+- name: run fabio job
+  command: nomad run ~/fabio.hcl
+
+- name: run http-echo job
+  command: nomad run ~/http-echo.hcl  

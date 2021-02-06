@@ -9,8 +9,8 @@
   tasks:    
     - name: install common dependencies
       vars:
-        consul_version: 1.8.4
-        nomad_version: 0.12.5
+        consul_version: 1.9.3
+        nomad_version: 1.0.3
       include_tasks: tasks/install-common-dependencies.yml
     
     - name: configure server agents
@@ -20,3 +20,7 @@
     - name: configure client agents
       include_tasks: tasks/configure-client-agents.yml
       when: inventory_hostname in groups['client_nodes']
+
+    - name: run nomad jobs
+      include_tasks: tasks/run-nomad-jobs.yml
+      when: inventory_hostname == 'server-01'

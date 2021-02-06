@@ -1,0 +1,28 @@
+job "fabio" {
+  datacenters = ["local-cluster"]
+  type = "system"
+
+  group "fabio" {
+    network {
+      port "lb" {
+        static = 8080
+      }
+      port "ui" {
+        static = 8081
+      }
+    }
+    task "fabio" {
+      driver = "docker"
+      config {
+        image = "fabiolb/fabio"
+        network_mode = "host"
+        ports = ["lb","ui"]
+      }
+
+      resources {
+        cpu    = 200
+        memory = 128
+      }
+    }
+  }
+}
