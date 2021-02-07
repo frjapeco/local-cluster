@@ -17,22 +17,11 @@
     url: https://releases.hashicorp.com/consul/{{ consul_version }}/consul_{{ consul_version }}_linux_amd64.zip
     dest: /tmp
 
-- name: download nomad
-  get_url: 
-    url: https://releases.hashicorp.com/nomad/{{ nomad_version }}/nomad_{{ nomad_version }}_linux_amd64.zip
-    dest: /tmp
-
 - name: extract consul
   unarchive:
     src: /tmp/consul_{{ consul_version }}_linux_amd64.zip
     dest: /usr/bin
     remote_src: yes    
-
-- name: extract nomad
-  unarchive:
-    src: /tmp/nomad_{{ nomad_version }}_linux_amd64.zip
-    dest: /usr/bin
-    remote_src: yes
 
 - name: set consul owner
   file:
@@ -90,11 +79,6 @@
     group: consul
     mode: 640
 
-- name: create nomad config folder
-  file:
-    path: /etc/nomad.d
-    state: directory
-
 - name: copy consul.service file
   template:
     src: ./templates/consul.service.j2
@@ -102,6 +86,37 @@
     owner: root
     group: root
     mode: 644
+
+- name: download nomad
+  get_url: 
+    url: https://releases.hashicorp.com/nomad/{{ nomad_version }}/nomad_{{ nomad_version }}_linux_amd64.zip
+    dest: /tmp
+
+- name: extract nomad
+  unarchive:
+    src: /tmp/nomad_{{ nomad_version }}_linux_amd64.zip
+    dest: /usr/bin
+    remote_src: yes
+
+- name: set nomad owner
+  file:
+    path: /usr/bin/nomad
+    owner: root
+    group: root
+
+- name: autocomplete nomad installation
+  command: nomad -autocomplete-install && complete -C /usr/local/bin/nomad nomad
+  ignore_errors: yes
+
+- name: create /opt/nomad directory
+  file:
+    path: /opt/nomad
+    state: directory
+
+- name: create nomad config folder
+  file:
+    path: /etc/nomad.d
+    state: directory
 
 - name: copy nomad.hcl file
   template:

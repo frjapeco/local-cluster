@@ -1,0 +1,14 @@
+- name: copy jenkins.service file
+  template:
+    src: ./templates/jenkins.service.j2
+    dest: /usr/lib/systemd/system/jenkins.service
+    owner: root
+    group: root
+    mode: 644
+
+- name: start jenkins service
+  systemd:
+    name: jenkins
+    state: restarted
+    enabled: yes
+    daemon_reload: yes

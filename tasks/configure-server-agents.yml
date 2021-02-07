@@ -14,7 +14,7 @@
     group: root
     mode: 644
 
-- name: copy consul-server-config.hcl file
+- name: copy consul server.hcl file
   template:
     src: ./templates/consul-server-config.hcl.j2
     dest: /etc/consul.d/server.hcl
@@ -22,33 +22,10 @@
     group: consul
     mode: 644
 
-- name: copy nomad-server-config.hcl file
+- name: copy nomad server.hcl file
   template:
     src: ./templates/nomad-server-config.hcl.j2
     dest: /etc/nomad.d/server.hcl
-
-#- name: copy fabio.hcl file
-#  template:
-#    src: ./templates/fabio.hcl.j2
-#    dest: /etc/nomad.d/fabio.hcl
-
-#- name: copy jenkins.service file
-#  template:
-#    src: ./templates/jenkins.service.j2
-#    dest: /usr/lib/systemd/system/jenkins.service
-#    owner: root
-#    group: root
-#    mode: 640
-
+    
 - name: run server agents
   include_tasks: tasks/run-cluster-agents.yml
-
-#- name: start jenkins service
-#  systemd:
-#    name: jenkins
-#    state: restarted
-#    enabled: yes
-#    daemon_reload: yes
-
-#- name: run fabio job
-#  command: nomad job run /etc/nomad.d/fabio.hcl

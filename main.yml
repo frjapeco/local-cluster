@@ -24,3 +24,7 @@
     - name: run nomad jobs
       include_tasks: tasks/run-nomad-jobs.yml
       when: inventory_hostname == 'server-01'
+
+    - name: run jenkins
+      include_tasks: tasks/run-jenkins.yml
+      when: inventory_hostname == 'server-01'
