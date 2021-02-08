@@ -12,4 +12,4 @@
   command: nomad run ~/fabio.hcl
 
 - name: run http-echo job
-  command: nomad run ~/http-echo.hcl  
+  command: nomad run ~/http-echo.hcl
