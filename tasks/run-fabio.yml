@@ -1,0 +1,7 @@
+- name: copy fabio.hcl file
+  template:
+    src: ./templates/fabio.hcl.j2
+    dest: ~/fabio.hcl
+
+- name: run fabio job
+  command: nomad run ~/fabio.hcl

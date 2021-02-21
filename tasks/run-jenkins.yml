@@ -4,8 +4,19 @@
 - name: ensure the jenkins repository is configured
   apt_repository: repo='deb https://pkg.jenkins.io/debian-stable binary/' state=present
 
-- name: ensure jenkins is installed
-  apt: name=jenkins update_cache=yes
+- name: install jenkins packages
+  apt:
+    name: "{{ packages }}"
+    state: present
+    update_cache: yes
+  vars:
+    packages:
+    - openjdk-8-jdk
+    - jenkins
 
-- name: ensure jenkins is running
-  service: name=jenkins state=started
+- name: start jenkins service
+  systemd:
+    name: jenkins
+    state: restarted
+    enabled: yes
+    daemon_reload: yes

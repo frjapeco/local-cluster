@@ -4,14 +4,12 @@
   become: yes
   become_user: '{{ ansible_user }}'
   vars_files:
-    - vault.yml
+    - secrets.yml
+    - config.yml
 
   tasks:    
-    - name: install common dependencies
-      vars:
-        consul_version: 1.9.3
-        nomad_version: 1.0.3
-      include_tasks: tasks/install-common-dependencies.yml
+    - name: configure common dependencies
+      include_tasks: tasks/configure-common-dependencies.yml
     
     - name: configure server agents
       include_tasks: tasks/configure-server-agents.yml
@@ -21,10 +19,10 @@
       include_tasks: tasks/configure-client-agents.yml
       when: inventory_hostname in groups['client_nodes']
 
-    - name: run nomad jobs
-      include_tasks: tasks/run-nomad-jobs.yml
+    - name: run fabio
+      include_tasks: tasks/run-fabio.yml
       when: inventory_hostname == 'server-01'
 
-    #- name: run jenkins
-    #  include_tasks: tasks/run-jenkins.yml
-    #  when: inventory_hostname == 'server-01'
+    - name: run jenkins
+      include_tasks: tasks/run-jenkins.yml
+      when: inventory_hostname == 'server-01'
