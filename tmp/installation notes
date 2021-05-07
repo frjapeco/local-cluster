@@ -45,6 +45,8 @@ ssh-keygen
 ssh-copy-id -i ~/.ssh/local-cluster.pub basic-user@localhost -p 2222
 ssh-copy-id -i ~/.ssh/local-cluster.pub basic-user@localhost -p 2223
 ssh-copy-id -i ~/.ssh/local-cluster.pub basic-user@localhost -p 2224
+ssh-copy-id -i ~/.ssh/local-cluster.pub basic-user@localhost -p 2225
+ssh-copy-id -i ~/.ssh/local-cluster.pub basic-user@localhost -p 2226
 
 enable root login in ssh config file
 

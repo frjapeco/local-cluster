@@ -11,7 +11,7 @@
     - '/usr/lib/systemd/system/nomad.service'
     - '/etc/consul.d/'
     - '/etc/nomad.d/'
-    
+
 - name: install common packages
   apt:
     name: "{{ packages }}"
@@ -19,15 +19,13 @@
     update_cache: yes
   vars:
     packages:
-    - apt-transport-https
-    - ca-certificates
     - curl
     - software-properties-common
     - gnupg-agent
     - unzip
 
 - name: download consul
-  get_url: 
+  get_url:
     url: https://releases.hashicorp.com/consul/{{ consul_version }}/consul_{{ consul_version }}_linux_amd64.zip
     dest: /tmp
 
@@ -35,7 +33,7 @@
   unarchive:
     src: /tmp/consul_{{ consul_version }}_linux_amd64.zip
     dest: /usr/bin
-    remote_src: yes    
+    remote_src: yes
 
 - name: set consul owner
   file:
@@ -62,7 +60,7 @@
   file:
     path: /opt/consul
     state: directory
-    
+
 - name: set /opt/consul owner
   file:
     path: /opt/consul
@@ -83,7 +81,7 @@
     dest: /etc/consul.d/consul-ca-key.pem
     owner: root
     group: root
-    mode: 640 
+    mode: 640
 
 - name: copy consul.hcl file
   template:
@@ -102,7 +100,7 @@
     mode: 644
 
 - name: download nomad
-  get_url: 
+  get_url:
     url: https://releases.hashicorp.com/nomad/{{ nomad_version }}/nomad_{{ nomad_version }}_linux_amd64.zip
     dest: /tmp
 
@@ -144,7 +142,7 @@
     owner: root
     group: root
     mode: 644
-  
+
 - name: add an apt sign key for docker
   apt_key:
     url: https://download.docker.com/linux/ubuntu/gpg
@@ -163,7 +161,7 @@
   vars:
     packages:
     - docker-ce
-    - docker-ce-cli 
+    - docker-ce-cli
     - containerd.io
 
 - name: add user to docker group

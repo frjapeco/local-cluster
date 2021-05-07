@@ -1,8 +1,12 @@
 - name: ensure the jenkins apt repository key is installed
-  apt_key: url=https://pkg.jenkins.io/debian-stable/jenkins.io.key state=present
+  apt_key:
+    url: https://pkg.jenkins.io/debian-stable/jenkins.io.key
+    state: present
 
 - name: ensure the jenkins repository is configured
-  apt_repository: repo='deb https://pkg.jenkins.io/debian-stable binary/' state=present
+  apt_repository:
+    repo: 'deb https://pkg.jenkins.io/debian-stable binary/'
+    state: present
 
 - name: install jenkins packages
   apt:
@@ -17,6 +21,18 @@
 - name: start jenkins service
   systemd:
     name: jenkins
-    state: restarted
-    enabled: yes
-    daemon_reload: yes
+    state: started
+    enabled: true
+ 
+- name: waiting 30 secs until jenkins is started...
+  wait_for:
+    timeout: 30
+ 
+- name: get init password jenkins
+  shell: cat /var/lib/jenkins/secrets/initialAdminPassword
+  changed_when: false
+  register: result
+ 
+- name: print init password jenkins
+  debug:
+    var: result.stdout
