@@ -1,35 +1,20 @@
-- name: ensure the jenkins apt repository key is installed
-  apt_key:
-    url: https://pkg.jenkins.io/debian-stable/jenkins.io.key
-    state: present
-
-- name: ensure the jenkins repository is configured
-  apt_repository:
-    repo: 'deb https://pkg.jenkins.io/debian-stable binary/'
-    state: present
-
-- name: install jenkins packages
-  apt:
-    name: "{{ packages }}"
-    state: present
-    update_cache: yes
-  vars:
-    packages:
-    - openjdk-8-jdk
-    - jenkins
+- name: copy jenkins.service file
+  template:
+    src: ./templates/jenkins.service.j2
+    dest: /usr/lib/systemd/system/jenkins.service
+    owner: root
+    group: root
+    mode: 777
 
 - name: start jenkins service
   systemd:
     name: jenkins
-    state: started
-    enabled: true
- 
-- name: waiting 30 secs until jenkins is started...
-  wait_for:
-    timeout: 30
- 
+    state: restarted
+    enabled: yes
+    daemon_reload: yes
+
 - name: get init password jenkins
-  shell: cat /var/lib/jenkins/secrets/initialAdminPassword
+  shell: docker exec jenkins.service cat /var/jenkins_home/secrets/initialAdminPassword
   changed_when: false
   register: result
  

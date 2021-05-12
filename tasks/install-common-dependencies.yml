@@ -73,7 +73,7 @@
     dest: /etc/consul.d/consul-ca.pem
     owner: root
     group: root
-    mode: 640
+    mode: 777
 
 - name: install tls consul ca key
   copy:
@@ -81,7 +81,7 @@
     dest: /etc/consul.d/consul-ca-key.pem
     owner: root
     group: root
-    mode: 640
+    mode: 777
 
 - name: copy consul.hcl file
   template:
@@ -89,7 +89,7 @@
     dest: /etc/consul.d/consul.hcl
     owner: consul
     group: consul
-    mode: 640
+    mode: 777
 
 - name: copy consul.service file
   template:
@@ -97,7 +97,7 @@
     dest: /usr/lib/systemd/system/consul.service
     owner: root
     group: root
-    mode: 644
+    mode: 777
 
 - name: download nomad
   get_url:
@@ -141,7 +141,7 @@
     dest: /usr/lib/systemd/system/nomad.service
     owner: root
     group: root
-    mode: 644
+    mode: 777
 
 - name: add an apt sign key for docker
   apt_key:

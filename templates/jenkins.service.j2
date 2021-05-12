@@ -6,6 +6,8 @@ Requires=docker.service
 [Service]
 TimeoutStartSec=0
 Restart=always
+User=root
+Group=root
 ExecStartPre=-/usr/bin/docker exec %n stop
 ExecStartPre=-/usr/bin/docker rm %n
 ExecStartPre=/usr/bin/docker pull jenkins/jenkins:lts
