@@ -13,8 +13,12 @@
     enabled: yes
     daemon_reload: yes
 
+- name: pause 30 seconds until jenkins starts
+  pause:
+    seconds: 30
+
 - name: get init password jenkins
-  shell: docker exec jenkins.service cat /var/jenkins_home/secrets/initialAdminPassword
+  shell: docker exec jenkins cat /var/jenkins_home/secrets/initialAdminPassword
   changed_when: false
   register: result
  
