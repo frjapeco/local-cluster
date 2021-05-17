@@ -1,17 +1,3 @@
-- name: delete previous installation files
-  file:
-    path: '{{ item }}'
-    state: absent
-  with_items:
-    - '/usr/bin/consul'
-    - '/usr/bin/nomad'
-    - '/tmp/consul_{{ consul_version }}_linux_amd64.zip'
-    - '/tmp/nomad_{{ nomad_version }}_linux_amd64.zip'
-    - '/usr/lib/systemd/system/consul.service'
-    - '/usr/lib/systemd/system/nomad.service'
-    - '/etc/consul.d/'
-    - '/etc/nomad.d/'
-
 - name: install common packages
   apt:
     name: "{{ packages }}"
