@@ -1,8 +1,6 @@
 - hosts: all
   gather_facts: no
-  remote_user: '{{ ansible_user }}'
   become: yes
-  become_user: '{{ ansible_user }}'
   vars_files:
     - secrets.yml
     - config.yml

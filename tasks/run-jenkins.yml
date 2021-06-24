@@ -4,7 +4,7 @@
     dest: /usr/lib/systemd/system/jenkins.service
     owner: root
     group: root
-    mode: 777
+    mode: 644
 
 - name: start jenkins service
   systemd:
