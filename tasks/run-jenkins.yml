@@ -1,27 +1,5 @@
-- name: copy jenkins.service file
-  template:
-    src: ./templates/jenkins.service.j2
-    dest: /usr/lib/systemd/system/jenkins.service
-    owner: root
-    group: root
-    mode: 644
+- name: pull jenkins image
+  shell: docker pull jenkins/jenkins:lts
 
-- name: start jenkins service
-  systemd:
-    name: jenkins
-    state: restarted
-    enabled: yes
-    daemon_reload: yes
-
-- name: pause 30 seconds until jenkins starts
-  pause:
-    seconds: 30
-
-- name: get init password jenkins
-  shell: docker exec jenkins cat /var/jenkins_home/secrets/initialAdminPassword
-  changed_when: false
-  register: result
- 
-- name: print init password jenkins
-  debug:
-    var: result.stdout
+- name: start jenkins container
+  shell: docker run -d --name jenkins -p 8080:8080 -p 50000:50000 jenkins/jenkins:lts

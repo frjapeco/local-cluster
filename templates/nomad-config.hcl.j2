@@ -1,3 +1,9 @@
-datacenter = "local-cluster"
+datacenter = "{{ datacenter_name }}"
 log_level = "DEBUG"
 data_dir = "/tmp/nomad"
+bind_addr = "0.0.0.0"
+advertise {
+  http = "{{ ip_address }}"
+  rpc  = "{{ ip_address }}"
+  serf = "{{ ip_address }}"
+}

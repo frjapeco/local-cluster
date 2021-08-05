@@ -74,7 +74,7 @@
     src: ./templates/consul-config.hcl.j2
     dest: /etc/consul.d/consul.hcl
     owner: consul
-    group: consul
+    group: consul  
     mode: 644
 
 - name: copy consul.service file
@@ -152,5 +152,5 @@
 
 - name: add user to docker group
   user:
-    name: "{{ansible_user}}"
+    name: root
     group: docker

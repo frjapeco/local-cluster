@@ -1,5 +1,5 @@
 job "fabio" {
-  datacenters = ["local-cluster"]
+  datacenters = ["{{ datacenter_name }}"]
   type = "system"
 
   group "fabio" {

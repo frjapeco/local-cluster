@@ -1,4 +1,4 @@
-- name: install tls consul server certificate
+- name: copy tls consul server certificate
   copy:
     content: '{{ consul_server_cert }}'
     dest: /etc/consul.d/consul-cert.pem
@@ -6,7 +6,7 @@
     group: root
     mode: 644
 
-- name: install tls consul server key
+- name: copy tls consul server key
   copy:
     content: '{{ consul_server_key }}'
     dest: /etc/consul.d/consul-key.pem

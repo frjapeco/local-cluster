@@ -1,8 +1,0 @@
-[server_nodes]
-server-01  ansible_port=2222  ansible_host=localhost  ansible_user='{{ root_user }}'  ansible_become_user='{{ root_user }}'  ansible_become_pass='{{ root_pass }}'
-server-02  ansible_port=2223  ansible_host=localhost  ansible_user='{{ root_user }}'  ansible_become_user='{{ root_user }}'  ansible_become_pass='{{ root_pass }}'
-
-[client_nodes]
-client-01  ansible_port=2224  ansible_host=localhost  ansible_user='{{ root_user }}'  ansible_become_user='{{ root_user }}'  ansible_become_pass='{{ root_pass }}'
-client-02  ansible_port=2225  ansible_host=localhost  ansible_user='{{ root_user }}'  ansible_become_user='{{ root_user }}'  ansible_become_pass='{{ root_pass }}'
-client-03  ansible_port=2226  ansible_host=localhost  ansible_user='{{ root_user }}'  ansible_become_user='{{ root_user }}'  ansible_become_pass='{{ root_pass }}'

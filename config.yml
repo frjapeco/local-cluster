@@ -1,2 +1,4 @@
 consul_version: 1.9.3
 nomad_version: 1.0.3
+datacenter_name: local-cluster
+ip_address: "{{ ansible_eth1.ipv4.address }}"

@@ -1,6 +1,6 @@
 - hosts: all
-  gather_facts: no
   become: yes
+  become_user: root
   vars_files:
     - secrets.yml
     - config.yml
@@ -17,10 +17,10 @@
       include_tasks: tasks/configure-client-nodes.yml
       when: inventory_hostname in groups['client_nodes']
 
-    - name: run fabio lb
-      include_tasks: tasks/run-fabio-job.yml
-      when: inventory_hostname == 'server-01'
-    
     - name: install and run jenkins
       include_tasks: tasks/run-jenkins.yml
+      when: inventory_hostname == 'server-01'
+
+    - name: run fabio lb
+      include_tasks: tasks/run-fabio-job.yml
       when: inventory_hostname == 'server-01'
