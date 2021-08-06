@@ -1,12 +1,28 @@
-- name: pull jenkins image
-  shell: docker pull jenkins/jenkins:lts
+- name: install java 11
+  apt:
+    name: openjdk-11-jdk
+    state: present
+    update_cache: yes
 
-- name: start jenkins container
-  shell: docker run -d --name jenkins -p 8080:8080 -p 50000:50000 jenkins/jenkins:lts
+- name: ensure the jenkins apt repository key is installed
+  apt_key: url=https://pkg.jenkins.io/debian-stable/jenkins.io.key state=present
 
-- name: "waint until jenkins is up"
+- name: ensure the repository is configured
+  apt_repository: repo='deb https://pkg.jenkins.io/debian-stable binary/' state=present
+
+- name: install jenkins
+  apt: name=jenkins update_cache=yes
+  
+- name: start jenkins service
+  systemd:
+    name: jenkins
+    state: restarted
+    enabled: yes
+    daemon_reload: yes 
+
+- name: wait until jenkins is up
   uri:
-    url: "http://127.0.0.1:8080/login"
+    url: "http://localhost:8080/login"
     status_code: 200
   register: result
   until: result.status == 200
@@ -14,7 +30,7 @@
   delay: 1
   
 - name: get init password jenkins
-  shell: docker exec jenkins cat /var/jenkins_home/secrets/initialAdminPassword
+  shell: cat /var/lib/jenkins/secrets/initialAdminPassword
   changed_when: false
   register: password
 
