@@ -16,4 +16,8 @@
 - name: get init password jenkins
   shell: docker exec jenkins cat /var/jenkins_home/secrets/initialAdminPassword
   changed_when: false
-  register: result
+  register: password
+
+- name: print init password jenkins
+  debug:
+    var: password.stdout
