@@ -3,3 +3,17 @@
 
 - name: start jenkins container
   shell: docker run -d --name jenkins -p 8080:8080 -p 50000:50000 jenkins/jenkins:lts
+
+- name: "waint until jenkins is up"
+  uri:
+    url: "http://127.0.0.1:8080/login"
+    status_code: 200
+  register: result
+  until: result.status == 200
+  retries: 60
+  delay: 1
+  
+- name: get init password jenkins
+  shell: docker exec jenkins cat /var/jenkins_home/secrets/initialAdminPassword
+  changed_when: false
+  register: result
