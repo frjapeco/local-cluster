@@ -1,13 +1,11 @@
 - name: install common packages
   apt:
     name: "{{ packages }}"
-    state: present
     update_cache: yes
   vars:
     packages:
     - software-properties-common
     - gnupg-agent
-    - curl
     - unzip
 
 - name: download consul
@@ -53,17 +51,17 @@
     owner: consul
     group: consul
 
-- name: install tls consul ca
+- name: install consul tls ca
   copy:
-    content: '{{ consul_ca }}'
+    content: "{{ consul_ca }}"
     dest: /etc/consul.d/consul-ca.pem
     owner: root
     group: root
     mode: 644
 
-- name: install tls consul ca key
+- name: install consul tls ca key
   copy:
-    content: '{{ consul_ca_key }}'
+    content: "{{ consul_ca_key }}"
     dest: /etc/consul.d/consul-ca-key.pem
     owner: root
     group: root
@@ -132,17 +130,14 @@
 - name: add an apt sign key for docker
   apt_key:
     url: https://download.docker.com/linux/ubuntu/gpg
-    state: present
 
 - name: add apt repository for stable version
   apt_repository:
     repo: deb [arch=amd64] https://download.docker.com/linux/ubuntu focal stable
-    state: present
 
 - name: install docker packages
   apt:
     name: "{{ packages }}"
-    state: present
     update_cache: yes
   vars:
     packages:

@@ -16,9 +16,8 @@
 - name: start jenkins service
   systemd:
     name: jenkins
-    state: restarted
+    state: started
     enabled: yes
-    daemon_reload: yes 
 
 - name: wait until jenkins is up
   uri:

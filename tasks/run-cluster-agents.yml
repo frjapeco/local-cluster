@@ -1,13 +1,11 @@
 - name: start consul service
   systemd:
     name: consul
-    state: restarted
+    state: started
     enabled: yes
-    daemon_reload: yes
 
 - name: start nomad service
   systemd:
     name: nomad
-    state: restarted
+    state: started
     enabled: yes
-    daemon_reload: yes

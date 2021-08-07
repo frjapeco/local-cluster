@@ -1,14 +1,14 @@
-- name: copy tls consul server certificate
+- name: copy consul tls server certificate
   copy:
-    content: '{{ consul_server_cert }}'
+    content: "{{ consul_server_cert }}"
     dest: /etc/consul.d/consul-cert.pem
     owner: root
     group: root
     mode: 644
 
-- name: copy tls consul server key
+- name: copy consul tls server key
   copy:
-    content: '{{ consul_server_key }}'
+    content: "{{ consul_server_key }}"
     dest: /etc/consul.d/consul-key.pem
     owner: root
     group: root
