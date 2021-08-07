@@ -2,7 +2,7 @@ server {
     enabled = true
     bootstrap_expect = 2
     server_join {
-        retry_join = ["10.0.0.4","10.0.0.5"]
+        retry_join = {{ server_ips }}
         retry_max = 3
         retry_interval = "15s"
     }
