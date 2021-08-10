@@ -1,4 +1,3 @@
-# Basic config
 NETWORK_NAME = "local-cluster"
 LINUX_DISTRO = "bento/ubuntu-20.04"
 SERVER_NODES_COUNT = 1
@@ -19,9 +18,9 @@ Vagrant.configure("2") do |config|
             server.vm.hostname = serverId
             server.vm.network "private_network", ip: serverIp, virtualbox__intnet: NETWORK_NAME
             if i == 1
-                server.vm.network "forwarded_port", guest: 8500, host: 9000     # Consul
-                server.vm.network "forwarded_port", guest: 4646, host: 9001     # Nomad
-                server.vm.network "forwarded_port", guest: 8080, host: 9002     # Jenkins
+                server.vm.network "forwarded_port", guest: 8500, host: 9000     # consul
+                server.vm.network "forwarded_port", guest: 4646, host: 9001     # nomad
+                server.vm.network "forwarded_port", guest: 8080, host: 9002     # jenkins
             end
         end
     end
@@ -35,8 +34,8 @@ Vagrant.configure("2") do |config|
             client.vm.hostname = clientId
             client.vm.network "private_network", ip: clientIp, virtualbox__intnet: NETWORK_NAME
             if i == 1
-                client.vm.network "forwarded_port", guest: 9998, host: 9003     # Fabio
-                client.vm.network "forwarded_port", guest: 9999, host: 9999     # Deployed app
+                client.vm.network "forwarded_port", guest: 9998, host: 9003     # fabio ui
+                client.vm.network "forwarded_port", guest: 9999, host: 9999     # fabio lb
             end
             if i == CLIENT_NODES_COUNT
                 serverNodes = clusterNodes.select{ |node| node.id.start_with?("server-")}
