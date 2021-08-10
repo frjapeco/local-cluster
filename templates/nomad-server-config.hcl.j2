@@ -2,7 +2,7 @@ server {
     enabled = true
     bootstrap_expect = {{ server_nodes_count }}
     server_join {
-        retry_join = ["{{ server_ips | list | join ('\',\'') }}"]
+        retry_join = ["{{ server_ips | list | join ('\",\"') }}"]
         retry_max = 3
         retry_interval = "15s"
     }

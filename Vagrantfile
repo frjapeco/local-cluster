@@ -1,7 +1,7 @@
 NETWORK_NAME = "local-cluster"
 LINUX_DISTRO = "bento/ubuntu-20.04"
-SERVER_NODES_COUNT = 1
-CLIENT_NODES_COUNT = 1
+SERVER_NODES_COUNT = 2
+CLIENT_NODES_COUNT = 5
 
 ClusterNode = Struct.new(:id, :ip)
 
