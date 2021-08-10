@@ -10,13 +10,12 @@ Vagrant.configure("2") do |config|
     clusterNodes = []
 
     (1..SERVER_NODES_COUNT).each do |i|
-        clusterNodes << ClusterNode.new("server-#{i}","10.0.0.#{i+3}")
-        serverId = clusterNodes[i-1].id
-        serverIp = clusterNodes[i-1].ip
-        config.vm.define serverId do |server|
+        newServer = ClusterNode.new("server-#{i}","10.0.0.#{i+3}")
+        clusterNodes << newServer
+        config.vm.define newServer.id do |server|
             server.vm.box = LINUX_DISTRO
-            server.vm.hostname = serverId
-            server.vm.network "private_network", ip: serverIp, virtualbox__intnet: NETWORK_NAME
+            server.vm.hostname = newServer.id
+            server.vm.network "private_network", ip: newServer.ip, virtualbox__intnet: NETWORK_NAME
             if i == 1
                 server.vm.network "forwarded_port", guest: 8500, host: 9000     # consul
                 server.vm.network "forwarded_port", guest: 4646, host: 9001     # nomad
@@ -26,13 +25,12 @@ Vagrant.configure("2") do |config|
     end
 
     (1..CLIENT_NODES_COUNT).each do |i|
-        clusterNodes << ClusterNode.new("client-#{i}","10.0.0.#{i+SERVER_NODES_COUNT+3}")
-        clientId = clusterNodes[i-1].id
-        clientIp = clusterNodes[i-1].ip
-        config.vm.define clientId do |client|
+        newClient = ClusterNode.new("client-#{i}","10.0.0.#{i+SERVER_NODES_COUNT+3}")
+        clusterNodes << newClient
+        config.vm.define newClient.id do |client|
             client.vm.box = LINUX_DISTRO
-            client.vm.hostname = clientId
-            client.vm.network "private_network", ip: clientIp, virtualbox__intnet: NETWORK_NAME
+            client.vm.hostname = newClient.id
+            client.vm.network "private_network", ip: newClient.ip, virtualbox__intnet: NETWORK_NAME
             if i == 1
                 client.vm.network "forwarded_port", guest: 9998, host: 9003     # fabio ui
                 client.vm.network "forwarded_port", guest: 9999, host: 9999     # fabio lb
